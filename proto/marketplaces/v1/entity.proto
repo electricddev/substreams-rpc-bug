@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package eth.marketplaces.v1;
+
+message Trade {
+	string marketplace = 1;
+	string marketplace_address = 2;
+	string order_hash = 3;
+	string contract_address = 4;
+	string token_id = 5;
+	string amount = 6;
+	string buyer = 7;
+	string seller = 8;
+	string price = 9;
+	string payment_token = 10;
+
+	// internal
+	uint64 ordinal = 20;
+	uint32 log_index = 21;
+}
+
+message Transactions {
+	repeated Transaction transactions = 1;
+}
+
+message Transaction {
+	string tx_hash = 1;
+	uint64 block_number = 2;
+	string block_hash = 3;
+	uint64 block_timestamp = 4;
+	string origin = 7;
+	repeated Trade trades = 8;
+}
+
+

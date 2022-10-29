@@ -1,0 +1,47 @@
+specVersion: v0.1.0
+package:
+  name: "substreams_rpc_errors"
+  version: v0.1.0
+
+imports:
+  entity: https://github.com/Xeric-NFT/substreams-entity-change/raw/develop/substreams-entity-change-v0.1.0.spkg
+
+protobuf:
+  files:
+    - marketplaces/v1/entity.proto
+    - seaport/v1/seaport.proto
+
+  importPaths:
+    - ./proto
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/substreams_rpc_errors.wasm
+
+modules:
+  - name: map_marketplace_orders
+    kind: map
+    # First looksrare block happens at 14961465
+    initialBlock: 14961455
+    inputs:
+      - source: sf.ethereum.type.v2.Block
+    output:
+      type: proto:eth.marketplaces.v1.Transactions
+
+  - name: store_volumes
+    kind: store
+    updatePolicy: add
+    valueType: bigint
+    inputs:
+      - map: map_marketplace_orders
+
+  - name: map_collection_data_entity_changes
+    kind: map
+    initialBlock: 14961455
+    inputs:
+      - source: sf.substreams.v1.Clock
+      - store: store_volumes
+        mode: deltas
+    output:
+      type: proto:substreams.entity.v1.EntityChanges

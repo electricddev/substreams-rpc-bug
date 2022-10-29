@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package eth.seaport.v1;
+
+
+
+message ERC20Tokens {
+	repeated ERC20Token tokens = 1;
+}
+  
+message ERC20Token {
+	string address = 1;
+	string name = 2;
+	string symbol = 3;
+	uint64 decimals = 4;
+}
+  
+
+
+message OrderFulfilled {
+	string orderHash = 1;
+	string offerer = 2;
+	string zone = 3;
+	string recipient = 4;
+	repeated SpentItem offer = 5;
+	repeated ReceivedItem consideration = 6;
+	uint64 ordinal = 7;
+	uint32  log_index = 8;
+}
+
+enum ItemType {
+	NATIVE = 0;
+	ERC20 = 1;
+	ERC721 = 2;
+	ERC1155 = 3;
+	ERC721_WITH_CRITERIA = 4;
+	ERC1155_WITH_CRITERIA = 5;
+};
+
+message SpentItem {
+	ItemType itemType = 1;
+	string token = 2;
+	string identifier = 3;
+	string amount = 4;
+}
+
+message ReceivedItem {
+	ItemType itemType = 1;
+    string token = 2;
+    string identifier = 3;
+    string amount = 4;
+    string recipient = 5;
+}
